@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "AppLibros",
-    "slug": "AppLibros",
+    "slug": "applibros",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.agustinheredia.applibros"
     },
     "web": {
       "output": "static",
@@ -43,6 +44,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "c585b18d-2c31-48d3-bc07-f6f9a14a0e3d"
+      }
+    },
+    "owner": "agustinheredia"
   }
 }
