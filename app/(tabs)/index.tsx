@@ -26,30 +26,41 @@ export default function Index() {
   const [books, setBooks] = useState<Book[]>([]);
   const [noSearchYet, setNoSearchYet] = useState<boolean>(true);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>("");
 
   const handleSearch = async () => {
     console.log(`Se pulsa el boton, contenido "${searchText}"`);
     setNoSearchYet(false);
+
     try {
       setLoading(true);
       setError(null);
+
       const result = await searchBooks(searchText);
 
-      if (result.length === 0) {
-        setBooks([]);
-      } else {
-        setBooks(result);
-      }
+      setBooks(result);
     } catch (error: any) {
-      console.log("Error during search : ", error);
+      //console.log("Error during search : ", error);
 
-      if (error?.message?.includes("Network request failed")) {
-        setError("Please check your internet connection.");
-      } else {
-        setError(
-          "An error has occurred, please check your internet connection or try again later.",
-        );
+      switch (error?.message) {
+        case "GOOGLE_BOOKS_QUOTA_EXCEEDED":
+          setError(
+            "Google Books API requests limit reached. Please try again later.",
+          );
+          break;
+
+        case "NO_INTERNET":
+          setError("No internet connection. Please check your network.");
+          break;
+
+        case "GOOGLE_BOOKS_SERVER_ERROR":
+          setError("Google Books service is unavailable. Try later.");
+          break;
+
+        case "GOOGLE_BOOKS_GENERIC_ERROR":
+        default:
+          setError("Something went wrong. Please try again later.");
+          break;
       }
 
       setBooks([]);

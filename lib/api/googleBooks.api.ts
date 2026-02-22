@@ -9,21 +9,45 @@ export const searchBooks = async (query: string) => {
   }
 
   try {
-    const response = await fetch(
-      `${BASE_URL}?q=${encodeURIComponent(query)}&maxResults=30`,
-    );
+    const url = `${BASE_URL}?q=${encodeURIComponent(query)}&maxResults=30`;
+    console.log("FETCH URL:", url);
+
+    const response = await fetch(url);
+
+    console.log("STATUS:", response.status);
 
     if (!response.ok) {
-      throw new Error("An error has ocurred with Google Books API");
+      const text = await response.text();
+      console.log("ERROR BODY:", text);
+
+      if (response.status === 429) {
+        const err = new Error("GOOGLE_BOOKS_QUOTA_EXCEEDED");
+        throw err;
+      }
+
+      if (response.status >= 500) {
+        const err = new Error("GOOGLE_BOOKS_SERVER_ERROR");
+        throw err;
+      }
+
+      const err = new Error("GOOGLE_BOOKS_GENERIC_ERROR");
+      throw err;
     }
 
     const data = await response.json();
 
-    console.log("FROM googleBooks.api.ts : ", data);
+    if (!data.items || !Array.isArray(data.items)) {
+      return [];
+    }
 
     return data.items.map(mapGoogleBookToBook);
-  } catch (error) {
-    console.error("Error during books search : ", error);
+  } catch (error: any) {
+    //console.error("Error during books search:", error);
+
+    if (error?.message === "Network request failed") {
+      throw new Error("NO_INTERNET");
+    }
+
     throw error;
   }
 };
