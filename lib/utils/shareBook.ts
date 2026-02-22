@@ -4,19 +4,18 @@ import { Book } from "../models/Book";
 
 export const shareBook = async (book: Book) => {
   try {
-    const message = `
-    Hello! Look the book I found!
+    const message = `Hello! Look the book I found!
 
-    Title: ${book.title}
-    ${book.authors?.length ? `Author(s): ${book.authors.join(", ")}` : ""}
-    ${book.pageCount ? `Pages: ${book.pageCount}` : ""}
-    ${book.publishedYear ? `Year: ${book.publishedYear}` : ""}
-    ${book.language ? `Language: ${book.language}` : ""}
+Title: ${book.title}
+${book.authors?.length ? `Author(s): ${book.authors.join(", ")}` : ""}
+${book.pageCount ? `Pages: ${book.pageCount}` : ""}
+${book.publishedYear ? `Year: ${book.publishedYear}` : ""}
+${book.language ? `Language: ${book.language}` : ""}
 
-    Description:
-    ${book.description ? book.description.slice(0, 500) : "No description available"}
+Description:
+${book.description ? book.description.slice(0, 500) : "No description available"}
 
-    Found using Book App for UNLP.`;
+Found using Book App for UNLP.`;
 
     await Share.share({
       message,
